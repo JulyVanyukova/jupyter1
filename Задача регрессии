@@ -1,0 +1,72 @@
+Постановка задачи регрессии
+Всего три набора данных(1) bilding_metadata, (2) train и (3) wether_train (1) содержит bilding_id для которого есть данные (2) (1) содержит site_id, для которого есть данные (3)
+
+%matplotlib inline
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import rcParams
+rcParams['figure.figsize'] = 16, 8
+Загрузка данных
+Получаем данные энергопотребления из CSV файла
+
+data = pd.read_csv(r'C:\Users\Геннадий\source\repos\ОСНОВЫ МАШИННОГО ОБУЧЕНИЯ\4. Задача регрессии\03\train.0.0.csv.gz')
+print(data.head())
+   building_id  meter            timestamp  meter_reading
+0            0      0  2016-01-01 00:00:00            0.0
+1            0      0  2016-01-01 01:00:00            0.0
+2            0      0  2016-01-01 02:00:00            0.0
+3            0      0  2016-01-01 03:00:00            0.0
+4            0      0  2016-01-01 04:00:00            0.0
+Визуализация данных
+Построим зависимость ТОЕ от даты\времени
+
+data.set_index('timestamp')['meter_reading'].plot()
+plt.show()
+
+Построение простой модели
+Возьмем среднее
+
+model = float(data['meter_reading'].mean())
+print('{0:.4}'.format(model))
+146.5
+Вычисление точности модели
+Рассчитаем ощибку по данным
+
+err = np.abs(data['meter_reading']- model).mean()
+print('{0:.3}%'.format(float(100*err/model)))
+78.3%
+
+1.Найдите характерную дату изменения энергопотребления 2.Вычислите не менее двух средних в периодах, ограниченных полученной датой или датами 3.Рассчитайте ошибку по новой модели,состоющей из нескольких средних
+
+data = pd.read_csv(r'C:\Users\Геннадий\source\repos\ОСНОВЫ МАШИННОГО ОБУЧЕНИЯ\4. Задача регрессии\03\building_metadata.csv.gz')
+print(data.head())
+   site_id  building_id primary_use  square_feet  year_built  floor_count
+0        0            0   Education         7432      2008.0          NaN
+1        0            1   Education         2720      2004.0          NaN
+2        0            2   Education         5376      1991.0          NaN
+3        0            3   Education        23685      2002.0          NaN
+4        0            4   Education       116607      1975.0          NaN
+data = pd.read_csv(r'C:\Users\Геннадий\source\repos\ОСНОВЫ МАШИННОГО ОБУЧЕНИЯ\4. Задача регрессии\03\weather_train.csv.gz')
+print(data.head())
+   site_id            timestamp  air_temperature  cloud_coverage  \
+0        0  2016-01-01 00:00:00             25.0             6.0   
+1        0  2016-01-01 01:00:00             24.4             NaN   
+2        0  2016-01-01 02:00:00             22.8             2.0   
+3        0  2016-01-01 03:00:00             21.1             2.0   
+4        0  2016-01-01 04:00:00             20.0             2.0   
+
+   dew_temperature  precip_depth_1_hr  sea_level_pressure  wind_direction  \
+0             20.0                NaN              1019.7             0.0   
+1             21.1               -1.0              1020.2            70.0   
+2             21.1                0.0              1020.2             0.0   
+3             20.6                0.0              1020.1             0.0   
+4             20.0               -1.0              1020.0           250.0   
+
+   wind_speed  
+0         0.0  
+1         1.5  
+2         0.0  
+3         0.0  
+4         2.6  
+ 
